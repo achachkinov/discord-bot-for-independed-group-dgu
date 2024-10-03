@@ -1,5 +1,7 @@
-const Discord = require('discord.js') // подключение библиотеки                  Видео про бота https://youtu.be/1lzPIhTaPDY
-const client = new Discord.Client() // создание клиента
+//Видео про бота https://youtu.be/1lzPIhTaPDY
+
+const Discord = require('discord.js')               
+const client = new Discord.Client()
 
 client.on('ready', () =>{ // ивент, когда бот запускается https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-ready
     client.generateInvite("ADMINISTRATOR").then(invite => console.log(`Ссылка на добавление ${invite}`))
@@ -84,7 +86,7 @@ async function change() {
 
 var interval = setInterval(function () { change(); }, 20000  ); // время обновления в миллисекундах
 
-client.login('NzQ0MjE3Njc1MjczODYzMzgw.XzgAuA.VH4SsVsTs1UtA_OO2FwxjizZPRg') // токен вашего бота
+client.login('MTI4ODE1OTIyNDk3NDU0MDg4NA.Go5Edd.DXQgduip4hQaxM29HOErwvCdyEovg2SXBSTCQA') // токен вашего бота
 
 // Хотите, чтобы ваш бот работал 24/7 бесплатно? Смотрите это видео: https://www.youtube.com/watch?v=wxdl4QK0am4
 
