@@ -1,10 +1,18 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { clientId, guildId, token } = require('./config.json');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { clientId, guildId, token, deletedMessageLog } = require('./config.json');
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder  } = require('discord.js');
+const { GuildsReatingOfMembers } = require('./memberRating.js')
 
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildPresences ] });
+const guildsReatingOfMembers = GuildsReatingOfMembers.getSingleton()
+
+
+
+global.client = client
+
+
 
 client.commands = new Collection();
 
@@ -17,7 +25,6 @@ for (const folder of commandFolders) {
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
 		const command = require(filePath);
-		// Set a new item in the Collection with the key as the command name and the value as the exported module
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
 		} else {
@@ -26,9 +33,34 @@ for (const folder of commandFolders) {
 	}
 }
 
+
+
+
+
 client.once(Events.ClientReady, readyClient => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+	guildsReatingOfMembers.setClient( client )
 });
+
+
+
+client.on( Events.MessageDelete, message => {
+	console.log("delete")
+	let embed = new EmbedBuilder()
+		.setTitle('Было удалено сообщение!')
+		.setColor(0xFF0000)
+		.addFields(
+			{ name: 'Удалённое сообщение: ', value: `${message.content}`},
+			{ name: "Автор: ", value:`${message.author.tag} (${message.author})`, inline: true  },
+			{ name: "Канал: ", value: `${message.channel}`, inline: true },
+		)
+		.setFooter({ text: ' - ', iconURL: `${message.author.avatarURL()}` })
+		.setTimestamp(message.createdAt);
+	client.channels.cache.get( deletedMessageLog ).send({ embeds: [embed] }); // айди вашего канала с логами
+})
+
+
+
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
@@ -54,44 +86,63 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
 
-// client.on('message', message =>{ // ивент, когда приходит любое сообщение в чат https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-message
-//     if (message.author.bot) return; // если автор сообщения - бот, ничего не происходит 
-//     if (message.content == 'S') { // если пользователь написал "!профиль" 
-//     let embed = new Discord.MessageEmbed() // создание ембед сообщения
-//     .setTitle(message.author.username) // в тайтле имя автора 
-//     let status = ''
-//     switch (message.author.presence.status) { // проверка статусов 
-//         case 'online':
-//             status = 'онлайн'; break; 
-//             case 'idle':
-//                 status = ':orange_circle:нет на месте'; break;
-//                 case 'offline':
-//                     status = 'нет в сети'; break;
-//                     case 'dnd':
-//                         status = ':red_circle:не беспокоить'; break;
-//     }
-//     embed.setDescription(`**Ваш дискорд айди: ${message.author.id}
-//     Ваш статус: ${status}
-//     Дата создания аккаунта: ${message.author.createdAt.toLocaleDateString()}
-//     Дата входа на сервер: ${message.member.joinedAt.toLocaleDateString()}
-//     **`) // описание ембеда
-//     .setColor('RANDOM') // рандомный цвет ембеда
-//     .setThumbnail(message.author.avatarURL()) // вставляем в ембед аватарку пользователя
-//     message.channel.send(embed) // отправляем сообщение в канал где была написана команда   
-//     }
-// })
 
-// client.on('messageDelete', message =>{ // ивент, когда удаляется любое сообщение с сервера https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-guildMemberAdd
-//     let embed = new Discord.MessageEmbed()
-//     .setTitle('Было удалено сообщение!')
-//     .setColor('RANDOM')
-//     .addField(`Удалённое сообщение:`, message.content, true)
-//     .addField("Автор:",`${message.author.tag} (${message.author})`,true)
-//     .addField("Канал:", `${message.channel}`, false)
-//     .setFooter(' - ',`${message.author.avatarURL()}`)
-//     .setTimestamp(message.createdAt);
-//   client.channels.cache.get("АЙДИ КАНАЛА С ЛОГАМИ").send(embed); // айди вашего канала с логами
-// })
+client.on(Events.MessageCreate, message =>{ // ивент, когда приходит любое сообщение в чат https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-message
+    if (message.author.bot) return; // если автор сообщения - бот, ничего не происходит 
+    if (message.content == 'S') { // если пользователь написал "!профиль" 
+		let embed = new Discord.MessageEmbed() // создание ембед сообщения
+		.setTitle(message.author.username) // в тайтле имя автора 
+		let status = ''
+		switch (message.author.presence.status) { // проверка статусов 
+			case 'online':
+				status = 'онлайн'; break; 
+				case 'idle':
+					status = ':orange_circle:нет на месте'; break;
+					case 'offline':
+						status = 'нет в сети'; break;
+						case 'dnd':
+							status = ':red_circle:не беспокоить'; break;
+		}
+		embed.setDescription(`**Ваш дискорд айди: ${message.author.id}
+		Ваш статус: ${status}
+		Дата создания аккаунта: ${message.author.createdAt.toLocaleDateString()}
+		Дата входа на сервер: ${message.member.joinedAt.toLocaleDateString()}
+		**`) // описание ембеда
+		.setColor('RANDOM') // рандомный цвет ембеда
+		.setThumbnail(message.author.avatarURL()) // вставляем в ембед аватарку пользователя
+		message.channel.send(embed) // отправляем сообщение в канал где была написана команда   
+    } else {
+		addPointsToMemberForCreateMessage( message )
+	}
+})
+
+
+function addPointsToMemberForCreateMessage( message ) {
+	let idMember = message.author.id
+	let idGuild = message.guild.id
+	let guildReatingOfMembers = guildsReatingOfMembers.getGuildMembersReating( idGuild )
+	let memberRating = guildReatingOfMembers.getMemberRatingById( idMember )
+	memberRating.addPoint()
+	let amountOfCreatedMessages = memberRating.getIndicator( "amountOfCreatedMessages" )
+	amountOfCreatedMessages+=1
+	memberRating.setIndicator( "amountOfCreatedMessages", amountOfCreatedMessages )
+	awardAMedalIfLineCrossed( memberRating, amountOfCreatedMessages )
+}
+
+function awardAMedalIfLineCrossed( memberRating, amountOfCreatedMessages ) {
+	switch ( amountOfCreatedMessages ) {
+		case 10:
+			memberRating.awardMedal( "10message" ); break;
+		case 100:
+			memberRating.awardMedal( "100message" ); break;
+		case 1000:
+			memberRating.awardMedal( "1000message" ); break;
+		case 10000:
+			memberRating.awardMedal( "10000message" ); break;
+		case 100000:
+			memberRating.awardMedal( "100000message" ); break;
+	}
+}
 
 // client.on('guildMemberAdd', member =>{ // ивент, когда пользователь присоединяется к серверу https://discord.js.org/#/docs/main/stable/class/Client?scrollTo=e-guildMemberAdd
 //     let embed = new Discord.MessageEmbed()
@@ -133,8 +184,4 @@ client.on(Events.InteractionCreate, async interaction => {
 // var interval = setInterval(function () { change(); }, 20000  ); // время обновления в миллисекундах
 
  // токен вашего бота
-
-client.login(clientId)
-// Хотите, чтобы ваш бот работал 24/7 бесплатно? Смотрите это видео: https://www.youtube.com/watch?v=wxdl4QK0am4
-
-// Bot by Sanich https://youtube.com/sanich - фишки, гайды по приложению Discord
+client.login(token)

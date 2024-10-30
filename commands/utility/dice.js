@@ -1,4 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { GuildsReatingOfMembers } = require("../../memberRating.js")
+
+let singleton = GuildsReatingOfMembers.getSingleton()
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,17 +20,22 @@ module.exports = {
                     { name: '6', value: '6' },
                 )),
 	async execute(interaction) {
+
+        let target = interaction.member
+		let guild = singleton.getGuildMembersReating( interaction.guild.id )
+        let memberReating = guild.getMemberRatingById( target.id )
+
         const message = interaction.options.getString('input')
         const resultOfRollDice = Math.floor(Math.random()*6) + 1
         if ( message ) {
             if (resultOfRollDice == Number( message ) ) {
                 await interaction.reply("you win!! drawn number is " + String( resultOfRollDice ));
+                memberReating.addPoints( 10 )
             } else {
                 await interaction.reply("you lose!! fool!! drawn number is " + String( resultOfRollDice ));
             }
         } else {
             await interaction.reply("drawn number is " + String( resultOfRollDice ));
         }
-        await interaction.followUp("try again ");
 	},
 };
