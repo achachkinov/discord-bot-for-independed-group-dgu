@@ -120,16 +120,16 @@ client.on(Events.MessageCreate, message =>{ // ивент, когда прихо
 function addPointsToMemberForCreateMessage( message ) {
 	let idMember = message.author.id
 	let idGuild = message.guild.id
-	let guildReatingOfMembers = guildsReatingOfMembers.getGuildMembersReating( idGuild )
-	let memberRating = guildReatingOfMembers.getMemberRatingById( idMember )
-	memberRating.addPoint()
-	let amountOfCreatedMessages = memberRating.getIndicator( "amountOfCreatedMessages" )
-	amountOfCreatedMessages+=1
+	let memberStatistic = guildsReatingOfMembers.getMemberReating( idGuild, idMember )
+	memberStatistic.addPoint()
+	//memberStatistic.amountOfCreatedMessages += 1
+	let amountOfCreatedMessages = memberStatistic.getIndicator( "amountOfCreatedMessages" )
+	amountOfCreatedMessages += 1
 	memberRating.setIndicator( "amountOfCreatedMessages", amountOfCreatedMessages )
-	awardAMedalIfLineCrossed( memberRating, amountOfCreatedMessages )
+	awardAMedalIfLineCrossed( memberStatistic, amountOfCreatedMessages )
 }
 
-function awardAMedalIfLineCrossed( memberRating, amountOfCreatedMessages ) {
+function awardAMedalIfLineCrossed( memberStatistic, amountOfCreatedMessages ) {
 	switch ( amountOfCreatedMessages ) {
 		case 10:
 			memberRating.awardMedal( "10message" ); break;

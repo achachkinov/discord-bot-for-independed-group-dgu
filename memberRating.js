@@ -7,6 +7,12 @@ class GuildsReatingOfMembers {
 
         #guildsCollection = {}
 
+        
+    getMemberReating( guildId, memberId ) {
+        let guildMembersReating = this.getGuildMembersReating( guildId )
+        let member = guildMembersReating.getMemberRatingById( memberId )
+        return member
+    }
     getGuildMembersReating( idGuild ) {
         try {
             this.#createGuildMembersReatingIfDontExit( idGuild )
@@ -160,12 +166,15 @@ class MemberRating {///////////////
 
     addPoint() {
         this.#ratingMemberInfo.addPoints( 1 )
+        this.#reportIfLevelChanged()
     }
     subtractPoints( number ) {
         this.#ratingMemberInfo.addPoints( -number )
+        this.#reportIfLevelChanged()
     }
     addPoints( number ) {
         this.#ratingMemberInfo.addPoints( number )
+        this.#reportIfLevelChanged()
     }
 
     #reportIfLevelChanged() {
@@ -321,22 +330,22 @@ class RatingMemberInfo {
     getPoints() {
         let valueType = "points"
         let value = this.#getValue( valueType )
-        return value ? value : 0
+        return value ?? 0
     }
     getLevel() {
         let valueType = "level"
         let value = this.#getValue( valueType )
-        return value ? value : 0
+        return value ?? 0
     }
     getPointsOnLevel() {
         let valueType = "pointsOnLevel"
         let value = this.#getValue( valueType )
-        return value ? value : 0
+        return value ?? 0
     }
     getMedals() {
         let valueType = "medals"
         let value = this.#getValue( valueType )
-        return value ? value : []
+        return value ?? []
     }
     #getValue( valueType ) {
         this.#jsonFileRASOfReating.selectKey( this.#memberId )
