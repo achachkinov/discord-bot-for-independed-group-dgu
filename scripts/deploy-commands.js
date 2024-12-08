@@ -1,11 +1,20 @@
 const { REST, Routes } = require('discord.js');
-const { clientId, token } = require('./config.json');
+const { clientId, token } = require('../configurations/env.json');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const mongoose = require("mongoose")
+const { guildSchema } = require("../schemes/guildSchema")
+mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+const Guild = mongoose.model('Guild', guildSchema);
+
 const commands = [];
 // Grab all the command folders from the commands directory you created earlier
-const foldersPath = path.join(__dirname, 'commands');
+const parentDir = path.join(__dirname, '..');
+const foldersPath = path.join(parentDir, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
@@ -25,21 +34,8 @@ for (const folder of commandFolders) {
 }
 
 
-const guildsId = [];
 
-const guildsInfoFolderPath = path.join(__dirname, 'guildsInfo');
-const guildsInfoFolders = fs.readdirSync( guildsInfoFolderPath )
 
-for ( const folder of guildsInfoFolders ) {
-	const guildPath = path.join( guildsInfoFolderPath, folder );
-	const filePath = path.join(guildPath, 'configOfGuild.json');
-	const config = require(filePath);
-	if ( 'guildId' in config ) {
-		guildsId.push(config.guildId);
-	} else {
-		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-	}
-}
 
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(token);
@@ -50,7 +46,9 @@ const rest = new REST().setToken(token);
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
-		for ( const guildId of guildsId ) {
+		const guilds = await Guild.find()
+		for ( const guild of guilds ) {
+			const guildId = guild.guildId
 			const data = await rest.put(
 				Routes.applicationGuildCommands(clientId, guildId),
 				{ body: commands },
