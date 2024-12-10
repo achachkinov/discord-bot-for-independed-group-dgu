@@ -31,7 +31,7 @@ statisticSchema.pre('save', function(next) {
 const Guild = mongoose.model('Guild', guildSchema);
 const Member = mongoose.model('Member', memberSchema);
 const ChatId = mongoose.model('ChatId', chatIdSchema)
-const RoleId = mongoose.model('ChatId', roleIdSchema)
+const RoleId = mongoose.model('RoleId', roleIdSchema)
 const StatisticMember = mongoose.model('StatisticMember', statisticSchema)
 
 global.Guild = Guild

@@ -47,7 +47,7 @@ async function initAndSyncMemberOfGuld( member, guild, guildDataBase ) {///
 
 async function initAndSyncRoles( guild, guildDataBase ) {
 	for ( let roleName in listOfRoles ) {
-		let roleDataBase = global.RolesId.findOne( { "guildId" : `${guild.id}`, "roleName": roleName } )
+		let roleDataBase = await global.RoleId.findOne( { "guildId" : `${guild.id}`, "roleName": roleName } )
 		if ( !roleDataBase ) {
 			let roleInConfig = listOfRoles[ roleName ]
 			const roleId = new global.RoleId( { "guildId" : `${guild.id}`, "roleName": roleName } )
