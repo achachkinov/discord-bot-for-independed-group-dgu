@@ -1,64 +1,64 @@
 const { syncDisplayByDataBase } = require("./syncDisplayByDataBase")
+const listOfRoles = require("../configurations/listOfRoles.json")
 
 async function initAndSyncClientAndDataBase( client, Member, Guild ) {
-	let initAndSyncFunct = new InitAndSyncFunction( client, Member, Guild )
-	await initAndSyncFunct.initAndSync()
+	await initAndSync()
 }
 
-
-class InitAndSyncFunction {
-
-		#client
-		#Member
-		#Guild
-
-	constructor( client, Member, Guild ) {
-		this.#client = client
-		this.#Member = Member
-		this.#Guild = Guild
+async function initAndSync() {
+	let listOfGuilds = global.client.guilds.cache.toJSON()
+	for ( let guild of listOfGuilds ) {
+		await initAndSyncGuild( guild )
 	}
+}
 
-	async initAndSync() {
-		let listOfGuilds = this.#client.guilds.cache.toJSON()
-		for ( let guild of listOfGuilds ) {
-			await this.#initAndSyncGuild( guild )
+async function initAndSyncGuild( guild ) {
+	let guildDataBase = await getDataBaseOfGuild( guild )
+	await initAndSyncAllMembersOfGuild( guild, guildDataBase )
+	await initAndSyncRoles( guild, guildDataBase )
+}
+async function getDataBaseOfGuild( guild ) {
+	let guildDataBase = await global.Guild.findOne({ "guildId": `${guild.id}` });
+	if (!guildDataBase) {
+		guildDataBase = await new global.Guild({ "guildId": `${guild.id}` });
+	}
+	return guildDataBase
+}
+
+async function initAndSyncAllMembersOfGuild( guild, guildDataBase ) {
+	let listOfmembers = guild.members.cache.toJSON()
+	for ( let member of listOfmembers ) {
+		if ( member.bot ) { continue }
+		await initAndSyncMemberOfGuld( member, guild, guildDataBase )
+	}
+}
+
+async function initAndSyncMemberOfGuld( member, guild, guildDataBase ) {///
+	let memberDataBase = await global.Member.findOne({ "memberId": `${member.id}`, "guildId" : `${guild.id}` });
+	if (!memberDataBase) {
+		memberDataBase = new global.Member({ "memberId": `${member.id}`, "guildId" : `${guild.id}` });
+		guildDataBase.members.push( memberDataBase )
+		console.log( "nember " + member.id + " created" )
+	}
+	syncDisplayByDataBase( member, memberDataBase )
+	await guildDataBase.save()
+	await memberDataBase.save()
+}
+
+async function initAndSyncRoles( guild, guildDataBase ) {
+	for ( let roleName in listOfRoles ) {
+		let roleDataBase = global.RolesId.findOne( { "guildId" : `${guild.id}`, "roleName": roleName } )
+		if ( !roleDataBase ) {
+			let roleInConfig = listOfRoles[ roleName ]
+			const roleId = new global.RoleId( { "guildId" : `${guild.id}`, "roleName": roleName } )
+			await guild.roles.create({
+				name: roleInConfig.name,
+				color: roleInConfig.color,
+				permissions: [],
+			});
+			guildDataBase.rolesId.push( roleId )
 		}
-	}
-
-	async #initAndSyncGuild( guild ) {
-		let guildDataBase = await this.#getDataBaseOfGuild( guild )
-		await this.#initAndSyncAllMembersOfGuild( guild, guildDataBase )
-	}
-	async #getDataBaseOfGuild( guild ) {
-		let guildDataBase = await this.#Guild.findOne({ "guildId": `${guild.id}` });
-		if (!guildDataBase) {
-			guildDataBase = await new this.#Guild({ "guildId": `${guild.id}` });
-		}
-		return guildDataBase
-	}
-
-	async #initAndSyncAllMembersOfGuild( guild, guildDataBase ) {
-		let listOfmembers = guild.members.cache.toJSON()
-		for ( let member of listOfmembers ) {
-			if ( member.bot ) { continue }
-			await this.#initAndSyncMemberOfGuld( member, guild, guildDataBase )
-		}
-	}
-	
-	async #initAndSyncMemberOfGuld( member, guild, guildDataBase ) {///
-		let memberDataBase = await this.#Member.findOne({ "memberId": `${member.id}`, "guildId" : `${guild.id}` });
-		if (!memberDataBase) {
-			memberDataBase = new this.#Member({ "memberId": `${member.id}`, "guildId" : `${guild.id}` });
-		}
-		let findedElement = await this.#Guild.findOne({ guildId: `${guild.id}`, members: { $elemMatch: { memberId: `${member.id}` } } })
-		if ( !findedElement ) {
-			guildDataBase.members.push( memberDataBase )
-			console.log( "nember " + member.id + " created" )
-		}
-		syncDisplayByDataBase( member, memberDataBase )
-		await guildDataBase.save()
-		await memberDataBase.save()
-	}
+	} 
 }
 
 module.exports = { initAndSyncClientAndDataBase }

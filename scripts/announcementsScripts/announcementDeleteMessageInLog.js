@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js")
 
-function announcementDeleteMessageInLog( message, client ) {
+async function announcementDeleteMessageInLog( message, client ) {
     let embed = new EmbedBuilder()
 		.setTitle('Было удалено сообщение!')
 		.setColor(0xFF0000)
@@ -11,7 +11,9 @@ function announcementDeleteMessageInLog( message, client ) {
 		)
 		.setFooter({ text: ' - ', iconURL: `${message.author.avatarURL()}` })
 		.setTimestamp(message.createdAt);
-	client.channels.cache.get( deletedMessageLog ).send({ embeds: [embed] }); // айди вашего канала с логами
+	let deletedMessageLogDataBase = await global.ChatId.findOne( { guildId: `${message.guild.id}` , chatName: "deleteMessageLog" } )
+	let deletedMessageLogId = deletedMessageLogDataBase.ChatId
+	client.channels.cache.get( deletedMessageLogId ).send({ embeds: [embed] });
 }
 
 module.exports = { announcementDeleteMessageInLog }

@@ -4,6 +4,9 @@ const { Client, Events, GatewayIntentBits } = require('discord.js');
 const mongoose = require("mongoose")
 const { guildSchema } = require("./schemes/guildSchema")
 const { memberSchema } = require("./schemes/memberSchema")
+const { chatIdSchema } = require("./schemes/chatIdSchema")
+const { roleIdSchema } = require("./schemes/roleIdSchema")
+const { statisticSchema } = require("./schemes/statisticSchema")
 
 mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
     useNewUrlParser: true,
@@ -11,19 +14,31 @@ mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
 });
 
 
-const { updateDisplayAndDataBase } = require('./scripts/preSaveDataBaseScript')
+const { updateDisplayAndDataBase } = require('./scripts/preSaveMemberDataBaseScript')
+const { updateMemberStatistic } = require('./scripts/preSaveStatisticDataBaseScript')
 
 memberSchema.pre('save', function(next) {
     updateDisplayAndDataBase( client, this )
     next();
 });
 
+statisticSchema.pre('save', function(next) {
+    updateMemberStatistic( client, this )
+    next();
+});
+
 
 const Guild = mongoose.model('Guild', guildSchema);
 const Member = mongoose.model('Member', memberSchema);
+const ChatId = mongoose.model('ChatId', chatIdSchema)
+const RoleId = mongoose.model('ChatId', roleIdSchema)
+const StatisticMember = mongoose.model('StatisticMember', statisticSchema)
 
 global.Guild = Guild
 global.Member = Member
+global.ChatId = ChatId
+global.RoleId = RoleId
+global.StatisticMember = StatisticMember
 
 
 const { setCommandsToClient } = require("./scripts/setCommandsToClient")

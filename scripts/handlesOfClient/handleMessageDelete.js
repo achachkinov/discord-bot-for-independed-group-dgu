@@ -1,8 +1,8 @@
 const { announcementDeleteMessageInLog } = require("../announcementsScripts/announcementDeleteMessageInLog")
 
-function handleMessageDelete( message, client ) {
+async function handleMessageDelete( message, client ) {
     console.log("delete")
-	announcementDeleteMessageInLog( message, client )
+	await announcementDeleteMessageInLog( message, client )
 }
 
 

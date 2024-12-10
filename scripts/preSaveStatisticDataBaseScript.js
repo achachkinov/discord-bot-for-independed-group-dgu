@@ -1,0 +1,27 @@
+async function updateMemberStatistic( client, dataBase ) {
+    let memberDataBase = await global.Member.findOne( { guildId: dataBase.guildId, memberId: dataBase.memberId } )
+    switch ( dataBase.statisticName ) {
+        case "amountOfCreatedMessage":
+            handleAmountOfCreatedMessage( dataBase, memberDataBase ); break;
+        
+    }
+
+    memberDataBase.save()
+}
+
+function handleAmountOfCreatedMessage( dataBase, memberDataBase ) {
+	switch ( dataBase.value ) {
+		case 10:
+			memberDataBase.push( "10message" ); break;
+		case 100:
+			memberDataBase.push( "100message" ); break;
+		case 1000:
+			memberDataBase.push( "1000message" ); break;
+		case 10000:
+			memberDataBase.push( "10000message" ); break;
+		case 100000:
+			memberDataBase.push( "100000message" ); break;
+	}
+}
+
+module.exports = { updateMemberStatistic }

@@ -2,9 +2,6 @@ const { syncDisplayByDataBaseAndClient } = require("./syncDisplayByDataBase")
 const { CalculatorLevelOfMember } = require("./calculatorLevelOfMember")
 
 function updateDisplayAndDataBase( client, dataBase ) {
-    if ( dataBase.isModified( "statistic" ) ) {
-        updateDataBaseByStatistic( dataBase )
-    }
     if ( dataBase.isModified( "roles" ) ) {
         updateDisplayAndDataBaseByRoles( client, dataBase )
     }
@@ -14,30 +11,11 @@ function updateDisplayAndDataBase( client, dataBase ) {
     }
 }
 
-function updateDataBaseByStatistic( dataBase ) {
-
-}
-
-function awardAMedalIfLineCrossed( memberRating, amountOfCreatedMessages ) {
-	switch ( amountOfCreatedMessages ) {
-		case 10:
-			memberRating.awardMedal( "10message" ); break;
-		case 100:
-			memberRating.awardMedal( "100message" ); break;
-		case 1000:
-			memberRating.awardMedal( "1000message" ); break;
-		case 10000:
-			memberRating.awardMedal( "10000message" ); break;
-		case 100000:
-			memberRating.awardMedal( "100000message" ); break;
-	}
-}
-
 
 function updateDisplayAndDataBaseByRoles( client, dataBase ) {
-    //updateRoles( client, dataBase )
+
     const originalAddresses = dataBase.getUpdate ? dataBase.getUpdate().addresses : dataBase.addresses; 
-    const modifiedAddresses = dataBase.addresses; // Текущие адреса
+    const modifiedAddresses = dataBase.addresses;
     console.log( originalAddresses, modifiedAddresses )
 }
 
