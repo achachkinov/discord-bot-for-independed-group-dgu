@@ -1,4 +1,6 @@
-const { getOrCreateFromDataBase } = require("../getOrCreateFromDataBase")
+const { getPointsForMessage } = require("../simpleFunctions/getPointsForMessage")
+const { addPointsToMember } = require("../simpleFunctions/addPointsToMember")
+const { addValueToStatistic } = require("../simpleFunctions/addValueToStatistic")
 
 async function handleMessageCreate( message, Member ) {
     if (message.author.bot) return;
@@ -6,16 +8,9 @@ async function handleMessageCreate( message, Member ) {
 }
 
 async function addPointsToMemberForCreateMessage( message ) {
-    let idMember = message.author.id
-    let idGuild = message.guild.id
-
-    let member = await global.Member.findOne({ memberId : idMember, guildId: idGuild })
-    member.points +=1
-    member.save()
-    
-    let statisticAmountOfCreatedMessage = await getOrCreateFromDataBase( global.StatisticMember, { memberId : idMember, guildId: idGuild, statisticName :"amountOfCreatedMessage" } ) 
-    statisticAmountOfCreatedMessage.value += 1
-    statisticAmountOfCreatedMessage.save()
+    let points = getPointsForMessage( message )
+    addPointsToMember( message, points )
+    addValueToStatistic( message, "amountOfCreatedMessage", 1 )
 }
 
 //const category = message.channel.parent;
