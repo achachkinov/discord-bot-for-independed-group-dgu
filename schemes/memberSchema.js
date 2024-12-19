@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-const { statisticSchema } = require("./statisticSchema")
 
 
 const memberSchema = new mongoose.Schema({
@@ -8,7 +7,6 @@ const memberSchema = new mongoose.Schema({
     roles: [ String ],
     points: { type: Number, default: 0 },
     level: { type: Number, default: 0 },
-    statistic: [ statisticSchema ]
 })
 
 
