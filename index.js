@@ -15,8 +15,8 @@ mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
 });
 
 
-const { updateDisplayAndDataBase } = require('./scripts/preSaveMemberDataBaseScript')
-const { updateMemberStatistic } = require('./scripts/preSaveStatisticDataBaseScript')
+const { updateDisplayAndDataBase } = require('./scripts/other/preSaveMemberDataBaseScript')
+const { updateMemberStatistic } = require('./scripts/other/preSaveStatisticDataBaseScript')
 
 memberSchema.pre('save', function(next) {
     updateDisplayAndDataBase( client, this )
@@ -44,7 +44,7 @@ global.StatisticMember = StatisticMember
 global.SpecialMessage = SpecialMessage
 
 
-const { setCommandsToClient } = require("./scripts/setCommandsToClient")
+const { setCommandsToClient } = require("./scripts/other/setCommandsToClient")
 
 const client = new Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMessageReactions ] });
 global.client = client
@@ -52,7 +52,7 @@ global.client = client
 setCommandsToClient( client )
 
 
-const { initAndSyncClientAndDataBase } = require('./scripts/initAndSyncClientAndDataBase')
+const { initAndSyncClientAndDataBase } = require('./scripts/other/initAndSyncClientAndDataBase')
 
 client.once(Events.ClientReady, async (readyClient) => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);

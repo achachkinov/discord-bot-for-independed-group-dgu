@@ -1,5 +1,5 @@
 const { syncDisplayByDataBase } = require("./syncDisplayByDataBase")
-const listOfRoles = require("../configurations/listOfRoles.json")
+const listOfRoles = require("../../configurations/listOfRoles.json")
 
 async function initAndSyncClientAndDataBase( client, Member, Guild ) {
 	await initAndSync()

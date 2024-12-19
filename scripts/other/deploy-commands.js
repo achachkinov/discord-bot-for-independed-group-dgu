@@ -1,10 +1,10 @@
 const { REST, Routes } = require('discord.js');
-const { clientId, token } = require('../configurations/env.json');
+const { clientId, token } = require('../../configurations/env.json');
 const fs = require('node:fs');
 const path = require('node:path');
 
 const mongoose = require("mongoose")
-const { guildSchema } = require("../schemes/guildSchema")
+const { guildSchema } = require("../../schemes/guildSchema")
 mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
