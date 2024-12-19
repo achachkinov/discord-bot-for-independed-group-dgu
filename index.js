@@ -7,6 +7,7 @@ const { memberSchema } = require("./schemes/memberSchema")
 const { chatIdSchema } = require("./schemes/chatIdSchema")
 const { roleIdSchema } = require("./schemes/roleIdSchema")
 const { statisticSchema } = require("./schemes/statisticSchema")
+const { specialMessageSchema } = require("./schemes/specialMessageSchema")
 
 mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
     useNewUrlParser: true,
@@ -33,12 +34,14 @@ const Member = mongoose.model('Member', memberSchema);
 const ChatId = mongoose.model('ChatId', chatIdSchema)
 const RoleId = mongoose.model('RoleId', roleIdSchema)
 const StatisticMember = mongoose.model('StatisticMember', statisticSchema)
+const SpecialMessage = mongoose.model('SpecialMessage', specialMessageSchema)
 
 global.Guild = Guild
 global.Member = Member
 global.ChatId = ChatId
 global.RoleId = RoleId
 global.StatisticMember = StatisticMember
+global.SpecialMessage = SpecialMessage
 
 
 const { setCommandsToClient } = require("./scripts/setCommandsToClient")
