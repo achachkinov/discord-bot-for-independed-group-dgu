@@ -11,8 +11,8 @@ async function announcementDeleteMessageInLog( message, client ) {
 		)
 		.setFooter({ text: ' - ', iconURL: `${message.author.avatarURL()}` })
 		.setTimestamp(message.createdAt);
-	let deletedMessageLogDataBase = await global.ChatId.findOne( { guildId: `${message.guild.id}` , chatName: "deleteMessageLog" } )
-	let deletedMessageLogId = deletedMessageLogDataBase.ChatId
+	let deletedMessageLogDataBase = await global.ChatId.findOne( { guildId: message.guild.id , chatName: "deleteMessageLog" } )
+	let deletedMessageLogId = deletedMessageLogDataBase.chatId
 	client.channels.cache.get( deletedMessageLogId ).send({ embeds: [embed] });
 }
 
