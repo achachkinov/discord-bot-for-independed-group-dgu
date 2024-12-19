@@ -46,7 +46,7 @@ global.SpecialMessage = SpecialMessage
 
 const { setCommandsToClient } = require("./scripts/setCommandsToClient")
 
-const client = new Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildPresences ] });
+const client = new Client({ intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.Guilds, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMessageReactions ] });
 global.client = client
 
 setCommandsToClient( client )
