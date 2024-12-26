@@ -5,7 +5,7 @@ const { Collection } = require('discord.js');
 function setCommandsToClient( client ) {
     client.commands = new Collection();
 
-    const parentDir = path.join(__dirname, '..');
+    const parentDir = path.join(__dirname, '../../');
     const foldersPath = path.join(parentDir, 'commands');
     const commandFolders = fs.readdirSync(foldersPath);
 

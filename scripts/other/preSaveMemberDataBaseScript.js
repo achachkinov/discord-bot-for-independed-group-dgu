@@ -1,22 +1,10 @@
 const { syncDisplayByDataBaseAndClient } = require("./syncDisplayByDataBase")
 const { CalculatorLevelOfMember } = require("./calculatorLevelOfMember")
 
-function updateDisplayAndDataBase( client, dataBase ) {
-    if ( dataBase.isModified( "roles" ) ) {
-        updateDisplayAndDataBaseByRoles( client, dataBase )
-    }
-
+function updateDisplayAndDataBase( dataBase ) {
     if ( dataBase.isModified( "points" ) ) {
-        updateDisplayAndDataBaseByPoints( client, dataBase )
+        updateDisplayAndDataBaseByPoints( global.client, dataBase )
     }
-}
-
-
-function updateDisplayAndDataBaseByRoles( client, dataBase ) {
-
-    const originalAddresses = dataBase.getUpdate ? dataBase.getUpdate().addresses : dataBase.addresses; 
-    const modifiedAddresses = dataBase.addresses;
-    console.log( originalAddresses, modifiedAddresses )
 }
 
 function updateDisplayAndDataBaseByPoints( client, dataBase ) {

@@ -1,4 +1,4 @@
-async function updateMemberStatistic( client, dataBase ) {
+async function updateMemberStatistic( dataBase ) {
     let memberDataBase = await global.Member.findOne( { guildId: dataBase.guildId, memberId: dataBase.memberId } )
     switch ( dataBase.statisticName ) {
         case "amountOfCreatedMessage":

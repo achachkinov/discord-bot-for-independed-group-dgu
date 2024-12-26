@@ -2,47 +2,14 @@ const { token } = require('./configurations/env.json')
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 
 const mongoose = require("mongoose")
-const { guildSchema } = require("./schemes/guildSchema")
-const { memberSchema } = require("./schemes/memberSchema")
-const { chatIdSchema } = require("./schemes/chatIdSchema")
-const { roleIdSchema } = require("./schemes/roleIdSchema")
-const { statisticSchema } = require("./schemes/statisticSchema")
-const { specialMessageSchema } = require("./schemes/specialMessageSchema")
 
 mongoose.connect('mongodb://localhost:27017/discordBotDGU', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
 
-
-const { updateDisplayAndDataBase } = require('./scripts/other/preSaveMemberDataBaseScript')
-const { updateMemberStatistic } = require('./scripts/other/preSaveStatisticDataBaseScript')
-
-memberSchema.pre('save', function(next) {
-    updateDisplayAndDataBase( client, this )
-    next();
-});
-
-statisticSchema.pre('save', function(next) {
-    updateMemberStatistic( client, this )
-    next();
-});
-
-
-const Guild = mongoose.model('Guild', guildSchema);
-const Member = mongoose.model('Member', memberSchema);
-const ChatId = mongoose.model('ChatId', chatIdSchema)
-const RoleId = mongoose.model('RoleId', roleIdSchema)
-const StatisticMember = mongoose.model('StatisticMember', statisticSchema)
-const SpecialMessage = mongoose.model('SpecialMessage', specialMessageSchema)
-
-global.Guild = Guild
-global.Member = Member
-global.ChatId = ChatId
-global.RoleId = RoleId
-global.StatisticMember = StatisticMember
-global.SpecialMessage = SpecialMessage
-
+const { initAllModels } = require("./scripts/other/initAllModels")
+initAllModels()
 
 const { setCommandsToClient } = require("./scripts/other/setCommandsToClient")
 
