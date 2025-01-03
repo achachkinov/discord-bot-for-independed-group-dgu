@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { updateDisplayAndDataBase } = require("../scripts/other/preSaveMemberDataBaseScript")
 
 const memberSchema = new mongoose.Schema({
     memberId: { type: String, required: true },
@@ -7,6 +8,9 @@ const memberSchema = new mongoose.Schema({
     level: { type: Number, default: 0 },
 })
 
-
+memberSchema.pre('save', function (next) {
+    updateDisplayAndDataBase(this)
+    next();
+});
 
 module.exports = { memberSchema }

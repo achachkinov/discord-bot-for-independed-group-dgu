@@ -1,49 +1,26 @@
+const fs = require('node:fs');
+const path = require('node:path');
+
 const mongoose = require("mongoose")
-const { guildSchema } = require("../../schemes/guildSchema")
-const { memberSchema } = require("../../schemes/memberSchema")
-const { chatIdSchema } = require("../../schemes/chatIdSchema")
-const { roleIdSchema } = require("../../schemes/roleIdSchema")
-const { statisticSchema } = require("../../schemes/statisticSchema")
-const { specialMessageSchema } = require("../../schemes/specialMessageSchema")
-const { memberRoleSchema } = require("../../schemes/memberRoleSchema")
-
-const { updateDisplayAndDataBase } = require('../../scripts/other/preSaveMemberDataBaseScript')
-const { updateMemberStatistic } = require('../../scripts/other/preSaveStatisticDataBaseScript')
-const { updateMemberRole } = require('../../scripts/other/preSaveMemberRoleDataBaseScript')
-
 
 function initAllModels() {
-    memberSchema.pre('save', function (next) {
-        updateDisplayAndDataBase(this)
-        next();
-    });
+    const parentDir = path.join(__dirname, '../../');
+    const foldersPath = path.join(parentDir, 'schemes');
+    const schemeFiles = fs.readdirSync(foldersPath).filter(file => file.endsWith('.js'));
+    for (const file of schemeFiles) {
+        const filePath = path.join(foldersPath, file);
+        const scheme = require(filePath);
+        const key = Object.keys(scheme)[0]
+        const nameModel = createNameModel(key)
+        global[nameModel] = mongoose.model(nameModel, scheme[key])
+    }
 
-    statisticSchema.pre('save', function (next) {
-        updateMemberStatistic(this)
-        next();
-    });
-
-    memberRoleSchema.pre('save', function (next) {
-        updateMemberRole(this)
-        next();
-    })
-
-
-    const Guild = mongoose.model('Guild', guildSchema);
-    const Member = mongoose.model('Member', memberSchema);
-    const ChatId = mongoose.model('ChatId', chatIdSchema)
-    const RoleId = mongoose.model('RoleId', roleIdSchema)
-    const StatisticMember = mongoose.model('StatisticMember', statisticSchema)
-    const SpecialMessage = mongoose.model('SpecialMessage', specialMessageSchema)
-    const MemberRole = mongoose.model('memberRole', memberRoleSchema)
-
-    global.Guild = Guild
-    global.Member = Member
-    global.ChatId = ChatId
-    global.RoleId = RoleId
-    global.StatisticMember = StatisticMember
-    global.SpecialMessage = SpecialMessage
-    global.MemberRole = MemberRole
+    function createNameModel(key) {
+        const postscript = "Schema"
+        const endKeyWithoutPostscript = key.length - postscript.length
+        key = key.substring(0, endKeyWithoutPostscript)
+        key = key.charAt(0).toUpperCase() + key.slice(1);
+        return key
+    }
 }
-
 module.exports = { initAllModels }

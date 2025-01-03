@@ -6,5 +6,4 @@ const roleIdSchema = new mongoose.Schema({
     roleId: { type: String, required: true }
 })
 
-
 module.exports = { roleIdSchema }
