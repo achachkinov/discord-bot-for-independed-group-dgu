@@ -1,11 +1,20 @@
 async function updateMemberStatistic( dataBase ) {
     let memberDataBase = await global.Member.findOne( { guildId: dataBase.guildId, memberId: dataBase.memberId } )
-    switch ( dataBase.statisticName ) {
-        case "amountOfCreatedMessage":
-            handleAmountOfCreatedMessage( dataBase, memberDataBase ); break;
-        
-    }
-
+	if ( dataBase.metaData.length != 0 ) {
+		switch (dataBase.metaData) {
+			case "medal":
+				handleMedal(); break;
+			case "channel":
+				handleChannel(); break;
+			case "category":
+				handleCategory(); break;
+		}
+	} else {
+		switch (dataBase.statisticName) {
+			case "amountOfCreatedMessage":
+				handleAmountOfCreatedMessage(dataBase, memberDataBase); break;
+		}
+	}
     memberDataBase.save()
 }
 

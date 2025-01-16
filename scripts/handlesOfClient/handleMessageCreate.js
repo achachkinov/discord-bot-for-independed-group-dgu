@@ -4,7 +4,10 @@ const { addValueToStatistic } = require("../simpleFunctions/addValueToStatistic"
 
 async function handleMessageCreate( message, Member ) {
     if (message.author.bot) return;
+    console.log( message )
     await addPointsToMemberForCreateMessage( message, Member )
+    addValueToStatistic( message, message.channelId, 1, [ "channel", "amountOfCreatedMessage" ] )
+    addValueToStatistic( message, message.channel.parentId, 1, [ "category", "amountOfCreatedMessage"] )
 }
 
 async function addPointsToMemberForCreateMessage( message ) {

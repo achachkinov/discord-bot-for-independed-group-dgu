@@ -1,0 +1,14 @@
+{   
+    "accessToProgerCategory" : {
+        "name": "🔑💻┃ доступ к прогерам",
+        "color": "#0C5AA6"
+    },
+    "accessToMathCategory" : {
+        "name": "🔑➕┃ доступ к математикам",
+        "color": "#0C5AA6"
+    },
+    "accesToEntertainmentCategory" : {
+        "name": "🔑🪁┃ доступ к развлечению",
+        "color": "#0C5AA6"
+    }
+}

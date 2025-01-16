@@ -5,6 +5,7 @@ const statisticMemberSchema = new mongoose.Schema({
     guildId: { type: String, required: true },
     memberId: { type: String, required: true },
     statisticName: { type: String, required: true },
+    metaData: { type: [ String ], default: [] },
     value: { type: Number, default: 0 },
 })
 

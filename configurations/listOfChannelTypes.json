@@ -1,0 +1,30 @@
+{
+    "none" : {
+        "pointsForCreateMessage" : 1,
+        "single" : false
+    },
+    "project" : {
+        "pointsForCreateMessage" : 2,
+        "single" : false
+    },
+    "memes" : {
+        "pointsForCreateMessage" : 5,
+        "single" : false 
+    },
+    "forum" : {
+        "pointsForCreateMessage" : 20,
+        "single" : false
+    },
+    "botChat" : {
+        "pointsForCreateMessage" : 0,
+        "single" : true
+    },
+    "entertaimentBotChat" : {
+        "pointsForCreateMessage" : 0,
+        "single" : true
+    },
+    "deleteMessageLog" : {
+        "pointsForCreateMessage" : 0,
+        "single" : true
+    }
+}

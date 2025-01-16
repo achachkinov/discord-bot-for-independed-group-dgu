@@ -13,7 +13,7 @@ const Guild = mongoose.model('Guild', guildSchema);
 
 const commands = [];
 // Grab all the command folders from the commands directory you created earlier
-const parentDir = path.join(__dirname, '..');
+const parentDir = path.join(__dirname, '../../');
 const foldersPath = path.join(parentDir, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 

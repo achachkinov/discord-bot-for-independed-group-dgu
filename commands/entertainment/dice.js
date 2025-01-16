@@ -1,7 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { GuildsReatingOfMembers } = require("../../memberRating.js")
-
-let singleton = GuildsReatingOfMembers.getSingleton()
 
 
 module.exports = {
@@ -20,7 +17,7 @@ module.exports = {
                     { name: '6', value: '6' },
                 )),
 	async execute(interaction) {
-
+        global.ChatId
         let target = interaction.member
 		let guild = singleton.getGuildMembersReating( interaction.guild.id )
         let memberReating = guild.getMemberRatingById( target.id )
