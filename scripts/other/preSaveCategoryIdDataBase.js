@@ -1,4 +1,5 @@
 const { PermissionFlagsBits } = require('discord.js');
+const { getRoleName } = require('../simpleFunctions/getAccessToCategoryRoleName.js');
 
 function createOrUpdateAccessToCategoryRole( dataBase ) {
     createRole( dataBase ).then( ( roleId ) => {
@@ -8,6 +9,7 @@ function createOrUpdateAccessToCategoryRole( dataBase ) {
 
 async function createRole( dataBase ) {
     const roleName = getRoleName( dataBase )
+    dataBase.accessToCategoryRoleName = roleName
     const guild = await global.client.guilds.fetch(dataBase.guildId);
     let roleDataBase = await global.RoleId.findOne( { guildId : dataBase.guildId, roleName: roleName } )
     if ( !roleDataBase ) {
@@ -20,11 +22,6 @@ async function createRole( dataBase ) {
         roleDataBase.save()
     }
     return roleDataBase.roleId
-}
-
-function getRoleName( dataBase ) {
-    const roleName = "🔑" + dataBase.emblem + "┃ доступ к \'" + dataBase.categoryName + "\'"
-    return roleName
 }
 
 async function addPremissionToCategory( dataBase, roleId ) {

@@ -5,13 +5,7 @@ function syncDisplayByDataBaseAndClient( client, memberDataBase ) {
 }
 
 function syncDisplayByDataBase( member, memberDataBase ) {
-    let substringOfMemberLevel = "[ " + memberDataBase.level + " lvl ]"
-    setSubstringToNickname( member, substringOfMemberLevel )
-}
-
-function setSubstringToNickname( member, substring ) {
-    let nickname = member.user.globalName ?? member.user.username
-    nickname += substring
+    const nickname = memberDataBase.nickname + "[ " + memberDataBase.level + " lvl ]"
     if ( member.manageable ) {
         member.setNickname( nickname )
     }

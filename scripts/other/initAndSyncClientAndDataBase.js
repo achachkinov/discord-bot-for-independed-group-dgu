@@ -1,5 +1,4 @@
 const { syncDisplayByDataBase } = require("./syncDisplayByDataBase")
-const listOfRoles = require("../../configurations/listOfRoles.json")
 
 async function initAndSyncClientAndDataBase( client, Member, Guild ) {
 	await initAndSync()
@@ -38,6 +37,7 @@ async function initAndSyncMemberOfGuld( member, guild, guildDataBase ) {///
 		memberDataBase = new global.Member({ "memberId": `${member.id}`, "guildId" : `${guild.id}` });
 		console.log( "nember " + member.id + " created" )
 	}
+	memberDataBase.nickname = member.user.globalName ?? member.user.username
 	syncDisplayByDataBase( member, memberDataBase )
 	await guildDataBase.save()
 	await memberDataBase.save()

@@ -41,7 +41,8 @@
                 "points": 100000,
                 "frontier" : 100000
             }
-        }     
+        },
+        "type" : [ "none", "channel", "category"]
     },
     "amountOfCreatedMemes": {
         "medals": {
@@ -85,7 +86,8 @@
                 "points": 100000,
                 "frontier" : 1000
             }
-        }    
+        },
+        "type" : [ "none", "category"]
     },
     "amountOfCreatedForumMessage": {
         "medals": {
@@ -129,6 +131,7 @@
                 "points": 4000,
                 "frontier" : 200
             }
-        }
+        },
+        "type" : [ "none", "category"]
     }
 }

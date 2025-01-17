@@ -1,3 +1,5 @@
+const { getRoleName } = require('../simpleFunctions/getAccessToCategoryRoleName.js')
+
 async function deleteAccessToCategoryRole( query ) {
     await deleteRole( query )
 }
@@ -13,11 +15,6 @@ async function deleteRole( argument ) {
             console.log( e )
         }
     }
-}
-
-function getRoleName( dataBase ) {
-    const roleName = "🔑" + dataBase.emblem + "┃ доступ к \'" + dataBase.categoryName + "\'"
-    return roleName
 }
 
 module.exports = { deleteAccessToCategoryRole }

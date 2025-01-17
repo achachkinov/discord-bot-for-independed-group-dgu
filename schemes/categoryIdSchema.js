@@ -8,6 +8,7 @@ const categoryIdSchema = new mongoose.Schema({
     emblem: { type: String, require: true},
     categoryName: { type: String, required: true },
     categoryColor: { type: String, required: true },
+    accessToCategoryRoleName: String,
 })
 
 categoryIdSchema.pre('save', function (next) {

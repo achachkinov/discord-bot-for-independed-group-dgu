@@ -100,7 +100,7 @@ async function createMainMenuMessage( content, options, interaction ) {
     const arguments = getEphemeralMessageArguments( content, row )
     const confirmation = await sendMessageAndGetConfirmation( arguments, interaction )
     try {
-        handleSelectedOption( confirmation, options ) 
+        await handleSelectedOption( confirmation, options ) 
     } catch ( e ) {
         console.log( e )
     }

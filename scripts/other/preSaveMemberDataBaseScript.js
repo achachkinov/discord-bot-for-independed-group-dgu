@@ -1,23 +1,25 @@
 const { syncDisplayByDataBaseAndClient } = require("./syncDisplayByDataBase")
 const { CalculatorLevelOfMember } = require("./calculatorLevelOfMember")
+const { announcementChangeLevelOfMember } = require('../announcementsScripts/announcementChangeLevelOfMember')
 
 function updateDisplayAndDataBase( dataBase ) {
-    if ( dataBase.isModified( "points" ) ) {
-        updateDisplayAndDataBaseByPoints( global.client, dataBase )
+    if ( dataBase.isModified( "points" ) || dataBase.isModified( "nickname" )) {
+        updateDisplayAndDataBaseByPoints(  dataBase )
     }
 }
 
-function updateDisplayAndDataBaseByPoints( client, dataBase ) {
+function updateDisplayAndDataBaseByPoints( dataBase ) {
     const newLevel = CalculatorLevelOfMember.getLevelByPoints( dataBase.points )
     if ( dataBase.level != newLevel ) {
-        announceAboutChangeLevel( client, newLevel )
+        announceAboutChangeLevel( newLevel )
         dataBase.level = newLevel
+        dataBase.save()
     }
-    syncDisplayByDataBaseAndClient( client, dataBase )
+    syncDisplayByDataBaseAndClient( global.client, dataBase )
 }
 
-function announceAboutChangeLevel( client, dataBase, newLevel ) {
-    console.log("update")
+function announceAboutChangeLevel( dataBase, newLevel ) {
+    //announcementChangeLevelOfMember(  )
 }
 
 

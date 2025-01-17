@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, MessageFlags, ChannelSelectMenuBuilder, ChannelType, TextInputStyle, TextInputBuilder, ModalBuilder, channelLink} = require('discord.js');
 const { sendModalAndGetConfirmation, sendMessageAndGetConfirmation, sendEphemeralMessage, sendMessage, getStringSelectMenu, getCategorySelectMenu, getChannelSelectMenu, getShortTextInput, getModal, handleSelectedOption, getEphemeralMessageArguments, getMessageArguments } = require('../../scripts/other/commandLib')
 const { getOrCreateFromDataBase } = require("../../scripts/simpleFunctions/getOrCreateFromDataBase")
-const { isBotChat } = require("../../scripts/simpleFunctions/isBotChat")
 const { adminId } = require("../../configurations/env.json")
 const channelTypes = require('../../configurations/listOfChannelTypes.json')
 
@@ -47,7 +46,7 @@ async function execute( interaction ) {
 
 function isCanUseACommand( interaction ) {
     const isAdmin = interaction.user.id === adminId 
-    return isBotChat( interaction ) && isAdmin
+    return  isAdmin
 }
 
 function defaultReply( interaction ) {
@@ -174,7 +173,6 @@ async function getSelectedChannelType( interaction ) {
     const row = new ActionRowBuilder().addComponents( optionSelectMenu );
     const arguments = getEphemeralMessageArguments( content, row )
     const confirmation = await sendMessageAndGetConfirmation( arguments, interaction )
-    await handleSelectedOption( confirmation, options )
     return { interaction: confirmation, value: confirmation.values[0] }
 }
 

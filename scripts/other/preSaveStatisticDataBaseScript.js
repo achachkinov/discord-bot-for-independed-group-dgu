@@ -1,36 +1,41 @@
+const listOfStatisticAchivment = require('../../configurations/listOfStatisticAchivment.json')
+const { getOrCreateFromDataBase } = require('../simpleFunctions/getOrCreateFromDataBase')
+const { announcementGetMedalOfMember } = require('../announcementsScripts/announcementGetMedalOfMember')
+const { announcementRemoveMedalOfMember } = require('../announcementsScripts/announcementRemoveMedalOfMember')
+
 async function updateMemberStatistic( dataBase ) {
-    let memberDataBase = await global.Member.findOne( { guildId: dataBase.guildId, memberId: dataBase.memberId } )
-	if ( dataBase.metaData.length != 0 ) {
-		switch (dataBase.metaData) {
-			case "medal":
-				handleMedal(); break;
-			case "channel":
-				handleChannel(); break;
-			case "category":
-				handleCategory(); break;
-		}
-	} else {
-		switch (dataBase.statisticName) {
-			case "amountOfCreatedMessage":
-				handleAmountOfCreatedMessage(dataBase, memberDataBase); break;
+	if ( dataBase.isModified('value') ) {
+		const statistic = listOfStatisticAchivment[ dataBase.statisticName ]
+		for ( const medalName in statistic.medals ) {
+			await updateMemberMedalStatus( dataBase, medalName, statistic )
 		}
 	}
-    memberDataBase.save()
 }
 
-function handleAmountOfCreatedMessage( dataBase, memberDataBase ) {
-	switch ( dataBase.value ) {
-		case 10:
-			memberDataBase.roles.push( "10message" ); break;
-		case 100:
-			memberDataBase.roles.push( "100message" ); break;
-		case 1000:
-			memberDataBase.roles.push( "1000message" ); break;
-		case 10000:
-			memberDataBase.roles.push( "10000message" ); break;
-		case 100000:
-			memberDataBase.roles.push( "100000message" ); break;
+async function updateMemberMedalStatus( dataBase, medalName, statistic ) {
+	const medal = statistic.medals[ medalName ]
+	const arguments = { guildId: dataBase.guildId, 
+		memberId: dataBase.memberId, 
+		medalName: medalName,
+		medalType: dataBase.type,
+		medalTypeData: dataBase.typeData 
+	}
+	const medalDataBase = getOrCreateFromDataBase( global.Medal, arguments )
+	if ( (dataBase.value >= medal.frontier ) && ( !medalDataBase.isHave )) {
+		medalDataBase.isHave = true
+		const guild = await global.client.guilds.fetch( dataBase.guildId );
+		const member = await guild.members.fetch( dataBase.memberId )
+		member.points += medal.points
+		announcementGetMedalOfMember()
+	} else if ( (dataBase.value < medal.frontier ) && ( medalDataBase.isHave )) {
+		medalDataBase.isHave = false
+		const guild = await global.client.guilds.fetch( dataBase.guildId );
+		const member = await guild.members.fetch( dataBase.memberId )
+		member.points -= medal.points
+		announcementRemoveMedalOfMember()
 	}
 }
+
+
 
 module.exports = { updateMemberStatistic }

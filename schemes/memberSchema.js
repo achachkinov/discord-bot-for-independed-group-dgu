@@ -6,6 +6,7 @@ const memberSchema = new mongoose.Schema({
     guildId: { type: String, required: true },
     points: { type: Number, default: 0 },
     level: { type: Number, default: 0 },
+    nickname: { type: String, required: true  }
 })
 
 memberSchema.pre('save', function (next) {
