@@ -18,7 +18,9 @@ async function updateMemberMedalStatus( dataBase, medalName, statistic ) {
 		memberId: dataBase.memberId, 
 		medalName: medalName,
 		medalType: dataBase.type,
-		medalTypeData: dataBase.typeData 
+		medalStatisticName : dataBase.statisticName,
+		medalTypeData: dataBase.typeData,
+		medalPoints: medal.points
 	}
 	const medalDataBase = getOrCreateFromDataBase( global.Medal, arguments )
 	if ( (dataBase.value >= medal.frontier ) && ( !medalDataBase.isHave )) {

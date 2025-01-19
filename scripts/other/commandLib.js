@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, MessageFlags, ChannelSelectMenuBuilder, ChannelType, TextInputStyle, TextInputBuilder, ModalBuilder, channelLink} = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, MessageFlags, ChannelSelectMenuBuilder, ChannelType, TextInputStyle, TextInputBuilder, ModalBuilder, channelLink, UserSelectMenuBuilder} = require('discord.js');
 
 async function sendModalAndGetConfirmation( modal, interaction ) {
     await interaction.showModal( modal )
@@ -8,7 +8,7 @@ async function sendModalAndGetConfirmation( modal, interaction ) {
         return confirmation
     } catch (e) {
         console.log( e )
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [], embeds: []  });
     }
 }
 
@@ -20,7 +20,7 @@ async function sendMessageAndGetConfirmation( messageArguments, interaction ) {
         return confirmation
     } catch (e) {
         console.log( e )
-        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+        await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [], embeds: [] });
     }
 }
 
@@ -75,8 +75,16 @@ function getChannelSelectMenu( plaseHolder ) {
     .setCustomId( plaseHolder )
     .setPlaceholder( plaseHolder )
     .addChannelTypes( ChannelType.GuildText, ChannelType.GuildForum );
-return categorySelectMenu
+    return categorySelectMenu
 }
+
+function getMemberSelectMenu( plaseHolder ) {
+    const categorySelectMenu = new UserSelectMenuBuilder()
+    .setCustomId( plaseHolder )
+    .setPlaceholder( plaseHolder )
+    return categorySelectMenu
+}
+
 
 function getShortTextInput( plaseHolder ) {
     const shortTextInput = new TextInputBuilder()
@@ -127,5 +135,6 @@ module.exports = { sendModalAndGetConfirmation,
     handleSelectedOption,
     getEphemeralMessageArguments,
     getMessageArguments,
-    createMainMenuMessage
+    createMainMenuMessage,
+    getMemberSelectMenu
 }

@@ -13,7 +13,6 @@ function updateDisplayAndDataBaseByPoints( dataBase ) {
     if ( dataBase.level != newLevel ) {
         announceAboutChangeLevel( newLevel )
         dataBase.level = newLevel
-        dataBase.save()
     }
     syncDisplayByDataBaseAndClient( global.client, dataBase )
 }

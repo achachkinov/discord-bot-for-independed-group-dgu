@@ -168,6 +168,7 @@ async function changeNickname( interaction ) {
 }
 
 async function setDefaultNickname( interaction ) {
+	const guild = await global.client.guilds.fetch( interaction.guildId );
 	const member = await guild.members.fetch( interaction.member.id )
 	const defaultNickName = member.user.globalName ?? member.user.username
 	await setNickname( interaction, defaultNickName )
