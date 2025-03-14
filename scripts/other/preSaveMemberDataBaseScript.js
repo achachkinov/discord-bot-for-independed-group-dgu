@@ -11,14 +11,10 @@ function updateDisplayAndDataBase( dataBase ) {
 function updateDisplayAndDataBaseByPoints( dataBase ) {
     const newLevel = CalculatorLevelOfMember.getLevelByPoints( dataBase.points )
     if ( dataBase.level != newLevel ) {
-        announceAboutChangeLevel( newLevel )
         dataBase.level = newLevel
+        announcementChangeLevelOfMember( dataBase )
     }
     syncDisplayByDataBaseAndClient( global.client, dataBase )
-}
-
-function announceAboutChangeLevel( dataBase, newLevel ) {
-    //announcementChangeLevelOfMember(  )
 }
 
 

@@ -11,9 +11,13 @@ async function announcementDeleteMessageInLog( message, client ) {
 		)
 		.setFooter({ text: ' - ', iconURL: `${message.author.avatarURL()}` })
 		.setTimestamp(message.createdAt);
-	let deletedMessageLogDataBase = await global.ChatId.findOne( { guildId: message.guild.id , chatName: "deleteMessageLog" } )
-	let deletedMessageLogId = deletedMessageLogDataBase.chatId
-	client.channels.cache.get( deletedMessageLogId ).send({ embeds: [embed] });
+	let deletedMessageLogDataBase = await global.ChatId.findOne( { guildId: message.guild.id , chatType: "deleteMessageLog" } )
+	try {
+		let deletedMessageLogId = deletedMessageLogDataBase.chatId
+		await client.channels.cache.get( deletedMessageLogId ).send({ embeds: [embed] });
+	} catch ( e ) {
+		console.log( e )
+	}
 }
 
 module.exports = { announcementDeleteMessageInLog }
