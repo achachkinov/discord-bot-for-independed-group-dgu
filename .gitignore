@@ -1,5 +1,36 @@
-node_modules
-deleted commands
+# Node.js Dependencies
+node_modules/
+
+# Build Output
+target/
+dist/ # Common for JavaScript/TypeScript builds
+build/ # Another common build output directory
+
+# Sensitive Configuration Files (with example file handling)
 configurations/env.json
 resources_and_config/env.json
-target
+# Example files (add these to your project)
+configurations/env.example.json
+resources_and_config/env.example.json
+
+# Temporary or Deleted Files/Folders (more specific)
+# If you really need a "deleted commands" folder, be more specific
+deleted commands/*
+# Or, better, ignore common temporary file extensions
+*.tmp
+*.log
+*.bak
+*.swp # Vim swap files
+*~ # Emacs backup files
+
+# OS generated files
+.DS_Store
+
+# IDE files
+.idea/
+*.iml
+
+# Other common files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

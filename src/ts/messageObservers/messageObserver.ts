@@ -1,5 +1,5 @@
 import { MessageStruct } from "../structs/MessageStruct";
 
-export interface messageObserver {
-    execute( messageStruct: MessageStruct ) : void;
+export interface MessageObserver {
+    execute( message: MessageStruct ) : void;
 }
