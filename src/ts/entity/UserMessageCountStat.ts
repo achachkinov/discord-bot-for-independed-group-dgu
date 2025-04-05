@@ -3,6 +3,6 @@ import { Stat } from "./Stat"
 import { UserStat } from "./UserStat"
 
 export type UserMessageCountStat = {
-    ChannelType: ChannelTypeName,
+    channelType: ChannelTypeName,
     messageCount:number
 } & UserStat
