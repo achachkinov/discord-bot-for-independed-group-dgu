@@ -1,0 +1,6 @@
+class Statistic {
+    constructor( scope, ) {
+
+    }
+
+}
